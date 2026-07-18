@@ -2,9 +2,10 @@
 
 import { useMemo } from "react";
 
-import { useWallet } from "@/hooks/useWallet";
+import Card from "@/components/ui/Card";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { useTokenPrices } from "@/hooks/useTokenPrices";
+import { useWallet } from "@/hooks/useWallet";
 
 export function PortfolioCard() {
   const wallet = useWallet();
@@ -27,7 +28,7 @@ export function PortfolioCard() {
   const portfolio = useMemo(() => {
     if (!prices) return [];
 
-    const items = [
+    return [
       {
         symbol: nativeSymbol,
         balance: nativeBalance,
@@ -59,8 +60,6 @@ export function PortfolioCard() {
         };
       }),
     ];
-
-    return items;
   }, [
     balances,
     nativeBalance,
@@ -75,42 +74,57 @@ export function PortfolioCard() {
   );
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold text-gray-900">
+    <Card>
+      <div>
+        <h2 className="text-2xl font-bold text-white">
           Portfolio
         </h2>
 
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-zinc-400">
           Live blockchain portfolio
         </p>
       </div>
 
       {!wallet.isConnected ? (
-        <div className="rounded-xl bg-gray-50 p-6 text-center text-gray-500">
+        <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900 p-5 text-zinc-400">
           Connect your wallet to view your portfolio.
         </div>
       ) : (
         <>
-          <div className="mb-6 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
-            <p className="text-sm opacity-80">
+          <div className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+            <p className="text-sm uppercase tracking-wide text-zinc-500">
               Total Portfolio Value
             </p>
 
-            <h2 className="mt-2 text-4xl font-bold">
-              $
-              {loading
-                ? "..."
-                : totalValue.toFixed(2)}
-            </h2>
+            <h3 className="mt-3 text-5xl font-bold text-white">
+              ${loading ? "..." : totalValue.toFixed(2)}
+            </h3>
 
-            <p className="mt-3 text-sm opacity-80">
-              Network: {network}
-            </p>
+            <div className="mt-6 flex items-center justify-between border-t border-zinc-800 pt-4">
+              <div>
+                <p className="text-xs uppercase tracking-wide text-zinc-500">
+                  Network
+                </p>
+
+                <p className="mt-1 font-medium text-white">
+                  {network}
+                </p>
+              </div>
+
+              <div className="text-right">
+                <p className="text-xs uppercase tracking-wide text-zinc-500">
+                  Assets
+                </p>
+
+                <p className="mt-1 font-medium text-white">
+                  {portfolio.length}
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="overflow-hidden rounded-xl border border-gray-200">
-            <div className="grid grid-cols-3 bg-gray-100 px-4 py-3 font-semibold">
+          <div className="mt-6 overflow-hidden rounded-2xl border border-zinc-800">
+            <div className="grid grid-cols-3 border-b border-zinc-800 bg-zinc-900 px-5 py-4 text-sm font-semibold text-zinc-400">
               <span>Token</span>
               <span className="text-center">
                 Balance
@@ -121,7 +135,7 @@ export function PortfolioCard() {
             </div>
 
             {(isLoading || loading) && (
-              <div className="p-4 text-center text-gray-500">
+              <div className="p-6 text-center text-zinc-400">
                 Loading portfolio...
               </div>
             )}
@@ -131,17 +145,17 @@ export function PortfolioCard() {
               portfolio.map((token) => (
                 <div
                   key={token.symbol}
-                  className="grid grid-cols-3 border-t border-gray-100 px-4 py-3"
+                  className="grid grid-cols-3 border-t border-zinc-800 px-5 py-4 transition-colors hover:bg-zinc-900/60"
                 >
-                  <span className="font-medium">
+                  <span className="font-medium text-white">
                     {token.symbol}
                   </span>
 
-                  <span className="text-center">
+                  <span className="text-center text-zinc-300">
                     {token.balance.toFixed(4)}
                   </span>
 
-                  <span className="text-right">
+                  <span className="text-right font-medium text-white">
                     ${token.value.toFixed(2)}
                   </span>
                 </div>
@@ -149,6 +163,6 @@ export function PortfolioCard() {
           </div>
         </>
       )}
-    </div>
+    </Card>
   );
 }

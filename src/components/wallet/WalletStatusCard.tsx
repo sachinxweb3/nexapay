@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+
+import Card from "@/components/ui/Card";
 import { useWallet } from "@/hooks/useWallet";
 
 export function WalletStatusCard() {
@@ -25,85 +27,102 @@ export function WalletStatusCard() {
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-semibold text-gray-900">
-          Wallet Status
-        </h2>
+    <Card>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-white">
+            Wallet Status
+          </h2>
+
+          <p className="mt-1 text-sm text-zinc-400">
+            Current wallet connection
+          </p>
+        </div>
 
         <span
           className={`rounded-full px-3 py-1 text-sm font-medium ${
             wallet.isConnected
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
+              ? "bg-emerald-500/15 text-emerald-400"
+              : "bg-red-500/15 text-red-400"
           }`}
         >
-          {wallet.isConnected ? "🟢 Connected" : "🔴 Disconnected"}
+          {wallet.isConnected ? "Connected" : "Disconnected"}
         </span>
       </div>
 
       {!wallet.isConnected ? (
-        <p className="text-gray-500">
-          Connect your wallet to view details.
-        </p>
+        <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+          <p className="text-zinc-400">
+            Connect your wallet to view account details.
+          </p>
+        </div>
       ) : (
-        <div className="space-y-6">
-          <div>
-            <p className="mb-2 text-sm font-medium uppercase tracking-wide text-gray-500">
-              Address
-            </p>
-
-            <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
-              <span className="font-mono text-sm">
-                {shortAddress}
-              </span>
-
+        <div className="mt-8 space-y-5">
+          <InfoRow
+            label="Address"
+            value={shortAddress}
+            action={
               <button
                 onClick={handleCopy}
-                className="font-medium text-blue-600 hover:text-blue-800"
+                className="text-sm font-medium text-blue-400 transition hover:text-blue-300"
               >
                 {copied ? "Copied!" : "Copy"}
               </button>
-            </div>
-          </div>
+            }
+          />
 
-          <div>
-            <p className="mb-2 text-sm font-medium uppercase tracking-wide text-gray-500">
-              Network
-            </p>
+          <InfoRow
+            label="Network"
+            value={wallet.chain?.name ?? "Unknown"}
+          />
 
-            <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
-              {wallet.chain?.name ?? "Unknown"}
-            </div>
-          </div>
+          <InfoRow
+            label="Chain ID"
+            value={wallet.chainId?.toString() ?? "-"}
+          />
 
-          <div>
-            <p className="mb-2 text-sm font-medium uppercase tracking-wide text-gray-500">
-              Chain ID
-            </p>
-
-            <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
-              {wallet.chainId ?? "-"}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-2 text-sm font-medium uppercase tracking-wide text-gray-500">
-              Balance
-            </p>
-
-            <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
-              {wallet.isBalanceLoading
+          <InfoRow
+            label="Balance"
+            value={
+              wallet.isBalanceLoading
                 ? "Loading..."
                 : wallet.balance
                 ? `${Number(wallet.balance.formatted).toFixed(4)} ${
                     wallet.balance.symbol
                   }`
-                : "0"}
-            </div>
-          </div>
+                : "0"
+            }
+          />
         </div>
       )}
+    </Card>
+  );
+}
+
+interface InfoRowProps {
+  label: string;
+  value: string;
+  action?: React.ReactNode;
+}
+
+function InfoRow({
+  label,
+  value,
+  action,
+}: InfoRowProps) {
+  return (
+    <div>
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+        {label}
+      </p>
+
+      <div className="flex items-center justify-between rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3">
+        <span className="font-medium text-white">
+          {value}
+        </span>
+
+        {action}
+      </div>
     </div>
   );
 }
