@@ -3,8 +3,9 @@
 import { useMemo } from "react";
 
 import Card from "@/components/ui/Card";
-import TokenLogo from "@/components/ui/TokenLogo";
 import PortfolioAllocationChart from "@/components/portfolio/PortfolioAllocationChart";
+import PortfolioStats from "@/components/portfolio/PortfolioStats";
+import TokenLogo from "@/components/ui/TokenLogo";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { useTokenPrices } from "@/hooks/useTokenPrices";
 import { useWallet } from "@/hooks/useWallet";
@@ -81,6 +82,9 @@ export function PortfolioCard() {
     0
   );
 
+  // Temporary 24h estimate
+  const previousValue = totalValue * 0.975;
+
   const topAsset = portfolio[0];
 
   return (
@@ -142,6 +146,11 @@ export function PortfolioCard() {
               </div>
             </div>
           </div>
+
+          <PortfolioStats
+            totalValue={totalValue}
+            previousValue={previousValue}
+          />
 
           <PortfolioAllocationChart
             data={portfolio.map((item) => ({
