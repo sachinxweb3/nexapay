@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 
 type TokenLogoProps = {
@@ -9,22 +8,22 @@ type TokenLogoProps = {
 };
 
 const LOGOS: Record<string, string> = {
-  ETH: "ethereum",
-  WETH: "ethereum",
-  USDC: "usd-coin",
-  USDT: "tether",
-  DAI: "dai",
-  MATIC: "matic-token",
-  POL: "polygon-ecosystem-token",
-  OP: "optimism",
-  ARB: "arbitrum",
-  LINK: "chainlink",
-  UNI: "uniswap",
-  AAVE: "aave",
-  PEPE: "pepe",
-  SHIB: "shiba-inu",
-  WBTC: "wrapped-bitcoin",
-  BTC: "bitcoin",
+  ETH: "279",
+  WETH: "279",
+  BTC: "1",
+  WBTC: "7598",
+  USDC: "6319",
+  USDT: "325",
+  DAI: "9956",
+  MATIC: "4713",
+  POL: "32440",
+  OP: "25244",
+  ARB: "16547",
+  LINK: "877",
+  UNI: "12504",
+  AAVE: "12645",
+  PEPE: "29850",
+  SHIB: "11939",
 };
 
 export default function TokenLogo({
@@ -33,14 +32,12 @@ export default function TokenLogo({
 }: TokenLogoProps) {
   const [error, setError] = useState(false);
 
-  const coin = LOGOS[symbol.toUpperCase()];
+  const id = LOGOS[symbol.toUpperCase()];
 
-  if (coin && !error) {
+  if (id && !error) {
     return (
-      <Image
-        src={`https://assets.coingecko.com/coins/images/${getCoinImageId(
-          coin
-        )}/small.png`}
+      <img
+        src={`https://assets.coingecko.com/coins/images/${id}/small.png`}
         alt={symbol}
         width={size}
         height={size}
@@ -62,26 +59,4 @@ export default function TokenLogo({
       {symbol.charAt(0).toUpperCase()}
     </div>
   );
-}
-
-function getCoinImageId(slug: string) {
-  const ids: Record<string, string> = {
-    ethereum: "279",
-    "usd-coin": "6319",
-    tether: "325",
-    dai: "9956",
-    "matic-token": "4713",
-    "polygon-ecosystem-token": "32440",
-    optimism: "25244",
-    arbitrum: "16547",
-    chainlink: "877",
-    uniswap: "12504",
-    aave: "12645",
-    bitcoin: "1",
-    "wrapped-bitcoin": "7598",
-    pepe: "29850",
-    "shiba-inu": "11939",
-  };
-
-  return ids[slug] ?? "1";
 }
