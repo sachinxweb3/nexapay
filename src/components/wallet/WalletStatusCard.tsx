@@ -21,108 +21,155 @@ export function WalletStatusCard() {
 
     setCopied(true);
 
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
     <Card>
       <div className="flex items-center justify-between">
+
         <div>
-          <h2 className="text-2xl font-bold text-white">
-            Wallet Status
+
+          <p className="text-sm uppercase tracking-[0.25em] text-emerald-400">
+            Wallet
+          </p>
+
+          <h2 className="mt-2 text-3xl font-bold text-white">
+            Overview
           </h2>
 
-          <p className="mt-1 text-sm text-zinc-400">
-            Current wallet connection
-          </p>
         </div>
 
-        <span
-          className={`rounded-full px-3 py-1 text-sm font-medium ${
+        <div
+          className={`rounded-full border px-4 py-2 text-sm font-semibold ${
             wallet.isConnected
-              ? "bg-emerald-500/15 text-emerald-400"
-              : "bg-red-500/15 text-red-400"
+              ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-400"
+              : "border-red-500/30 bg-red-500/15 text-red-400"
           }`}
         >
-          {wallet.isConnected ? "Connected" : "Disconnected"}
-        </span>
+          {wallet.isConnected ? "🟢 Connected" : "🔴 Offline"}
+        </div>
+
       </div>
 
       {!wallet.isConnected ? (
-        <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
-          <p className="text-zinc-400">
-            Connect your wallet to view account details.
+        <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
+
+          <div className="mb-4 text-5xl">
+            👛
+          </div>
+
+          <h3 className="text-xl font-semibold text-white">
+            Wallet Not Connected
+          </h3>
+
+          <p className="mt-3 text-zinc-400">
+            Connect your wallet to access portfolio,
+            balances and transaction history.
           </p>
+
         </div>
       ) : (
-        <div className="mt-8 space-y-5">
-          <InfoRow
-            label="Address"
-            value={shortAddress}
-            action={
+        <>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+
+            <StatCard
+              title="Network"
+              value={wallet.chain?.name ?? "Unknown"}
+              color="emerald"
+            />
+
+            <StatCard
+              title="Chain ID"
+              value={wallet.chainId?.toString() ?? "-"}
+              color="cyan"
+            />
+
+            <StatCard
+              title="Balance"
+              value={
+                wallet.isBalanceLoading
+                  ? "Loading..."
+                  : wallet.balance
+                  ? `${Number(wallet.balance.formatted).toFixed(4)} ${wallet.balance.symbol}`
+                  : "0"
+              }
+              color="violet"
+            />
+
+            <StatCard
+              title="Status"
+              value="Active"
+              color="orange"
+            />
+
+          </div>
+
+          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+
+            <div className="flex items-center justify-between">
+
+              <div>
+
+                <p className="text-xs uppercase tracking-widest text-zinc-500">
+                  Wallet Address
+                </p>
+
+                <h3 className="mt-2 text-lg font-semibold text-white">
+                  {shortAddress}
+                </h3>
+
+              </div>
+
               <button
                 onClick={handleCopy}
-                className="text-sm font-medium text-blue-400 transition hover:text-blue-300"
+                className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-black transition hover:scale-105"
               >
-                {copied ? "Copied!" : "Copy"}
+                {copied ? "Copied ✓" : "Copy"}
               </button>
-            }
-          />
 
-          <InfoRow
-            label="Network"
-            value={wallet.chain?.name ?? "Unknown"}
-          />
+            </div>
 
-          <InfoRow
-            label="Chain ID"
-            value={wallet.chainId?.toString() ?? "-"}
-          />
-
-          <InfoRow
-            label="Balance"
-            value={
-              wallet.isBalanceLoading
-                ? "Loading..."
-                : wallet.balance
-                ? `${Number(wallet.balance.formatted).toFixed(4)} ${
-                    wallet.balance.symbol
-                  }`
-                : "0"
-            }
-          />
-        </div>
+          </div>
+        </>
       )}
     </Card>
   );
 }
 
-interface InfoRowProps {
-  label: string;
+interface StatCardProps {
+  title: string;
   value: string;
-  action?: React.ReactNode;
+  color: "emerald" | "cyan" | "violet" | "orange";
 }
 
-function InfoRow({
-  label,
+function StatCard({
+  title,
   value,
-  action,
-}: InfoRowProps) {
+  color,
+}: StatCardProps) {
+  const colors = {
+    emerald:
+      "from-emerald-500/20 to-emerald-400/5 border-emerald-500/20",
+    cyan:
+      "from-cyan-500/20 to-cyan-400/5 border-cyan-500/20",
+    violet:
+      "from-violet-500/20 to-violet-400/5 border-violet-500/20",
+    orange:
+      "from-orange-500/20 to-orange-400/5 border-orange-500/20",
+  };
+
   return (
-    <div>
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-        {label}
+    <div
+      className={`rounded-2xl border bg-gradient-to-br p-5 ${colors[color]}`}
+    >
+      <p className="text-xs uppercase tracking-widest text-zinc-500">
+        {title}
       </p>
 
-      <div className="flex items-center justify-between rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3">
-        <span className="font-medium text-white">
-          {value}
-        </span>
-
-        {action}
-      </div>
+      <h3 className="mt-3 text-xl font-bold text-white break-all">
+        {value}
+      </h3>
     </div>
   );
 }
