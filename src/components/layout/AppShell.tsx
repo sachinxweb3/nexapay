@@ -3,65 +3,55 @@
 import React from "react";
 
 import Section from "@/components/ui/Section";
-import { WalletConnectButton } from "@/components/wallet/WalletConnectButton";
+import { HeroSection } from "@/components/dashboard/HeroSection";
+import { OverviewStats } from "@/components/dashboard/OverviewStats";
 import { WalletStatusCard } from "@/components/wallet/WalletStatusCard";
 import { PortfolioCard } from "@/components/portfolio/PortfolioCard";
 import { TransactionHistory } from "@/components/transactions/TransactionHistory";
 
 export function AppShell() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#09090B] text-white">
+    <main className="relative min-h-screen overflow-hidden bg-[#05070D] text-white">
+      {/* Background */}
+      <div className="absolute inset-0">
+        <div className="absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full bg-sky-500/10 blur-[180px]" />
+        <div className="absolute -right-40 top-20 h-[500px] w-[500px] rounded-full bg-violet-500/10 blur-[200px]" />
+        <div className="absolute bottom-0 left-1/2 h-[450px] w-[450px] -translate-x-1/2 rounded-full bg-emerald-500/10 blur-[180px]" />
 
-      {/* Background Glow */}
-      <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-emerald-500/10 blur-[140px]" />
-      <div className="absolute right-0 top-40 h-[500px] w-[500px] rounded-full bg-blue-500/10 blur-[180px]" />
-      <div className="absolute bottom-0 left-1/3 h-[450px] w-[450px] rounded-full bg-violet-500/10 blur-[180px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.04),transparent_55%)]" />
+      </div>
 
-      <div className="relative mx-auto max-w-7xl px-6 py-10">
+      <div className="relative mx-auto max-w-[1600px] px-6 py-10 lg:px-10">
+        {/* Hero */}
+        <HeroSection />
 
-        {/* Header */}
+        {/* Premium Overview Stats */}
+        <div className="mt-8">
+          <OverviewStats />
+        </div>
 
-        <header className="mb-12 flex flex-col gap-8 rounded-3xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur-xl md:flex-row md:items-center md:justify-between">
+        {/* Wallet + Portfolio */}
+        <div className="mt-12">
+          <Section
+            title="Portfolio Overview"
+            subtitle="Monitor your wallets, balances and supported networks."
+          >
+            <div className="grid gap-6 xl:grid-cols-2">
+              <WalletStatusCard />
+              <PortfolioCard />
+            </div>
+          </Section>
+        </div>
 
-          <div>
-
-            <h1 className="bg-gradient-to-r from-white via-emerald-300 to-cyan-300 bg-clip-text text-6xl font-black tracking-tight text-transparent">
-              NexaPay
-            </h1>
-
-            <p className="mt-4 text-lg text-zinc-300">
-              Professional Multi-chain Wallet Dashboard
-            </p>
-
-            <p className="mt-2 text-sm text-emerald-400">
-              Powered by Arc Network
-            </p>
-
-          </div>
-
-          <WalletConnectButton />
-
-        </header>
-
-        <Section
-          title="Overview"
-          subtitle="Monitor your assets across Ethereum, Base, Polygon, Arbitrum and Optimism."
-        >
-          <div className="grid gap-6 lg:grid-cols-2">
-            <WalletStatusCard />
-            <PortfolioCard />
-          </div>
-        </Section>
-
-        <div className="mt-10">
+        {/* Transactions */}
+        <div className="mt-12">
           <Section
             title="Recent Transactions"
-            subtitle="Latest on-chain activity"
+            subtitle="Latest blockchain activity across supported networks."
           >
             <TransactionHistory />
           </Section>
         </div>
-
       </div>
     </main>
   );
